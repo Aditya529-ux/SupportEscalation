@@ -1,49 +1,80 @@
 import streamlit as st
 
-# --------------------------------------------------
-# Page Configuration
-# --------------------------------------------------
+# ---------------------------------------------------
+# Page Config
+# ---------------------------------------------------
+
 st.set_page_config(
     page_title="SupportEscalation",
     page_icon="🤖",
     layout="wide"
 )
 
-# --------------------------------------------------
+# ---------------------------------------------------
+# Session State
+# ---------------------------------------------------
+
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+# ---------------------------------------------------
 # Sidebar
-# --------------------------------------------------
+# ---------------------------------------------------
+
 with st.sidebar:
+
     st.title("🤖 SupportEscalation")
 
     st.divider()
 
-    st.markdown("### Navigation")
-
     st.button("🏠 Home")
+
     st.button("💬 Chat")
+
     st.button("📊 Analytics")
+
     st.button("⚙️ Settings")
 
-    st.divider()
-
-    st.caption("Version 1.0")
-
-# --------------------------------------------------
+# ---------------------------------------------------
 # Main Page
-# --------------------------------------------------
+# ---------------------------------------------------
+
 st.title("🤖 AI Customer Support")
 
-st.write("Welcome to the SupportEscalation System.")
-
-st.info("Ask your question below.")
+st.write("Welcome to SupportEscalation.")
 
 st.divider()
 
-user_message = st.chat_input("Type your message...")
+# ---------------------------------------------------
+# Display Old Messages
+# ---------------------------------------------------
 
-if user_message:
-    st.chat_message("user").write(user_message)
+for message in st.session_state.messages:
 
-    st.chat_message("assistant").write(
-        "Thank you! AI integration starts in the coming days."
+    with st.chat_message(message["role"]):
+
+        st.markdown(message["content"])
+
+# ---------------------------------------------------
+# User Input
+# ---------------------------------------------------
+
+user_input = st.chat_input("Type your message...")
+
+if user_input:
+
+    st.session_state.messages.append(
+        {
+            "role": "user",
+            "content": user_input
+        }
     )
+
+    st.session_state.messages.append(
+        {
+            "role": "assistant",
+            "content": "Thank you! AI integration starts soon."
+        }
+    )
+
+    st.rerun()
